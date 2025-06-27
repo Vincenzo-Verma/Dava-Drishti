@@ -62,8 +62,7 @@ This system combines advanced deep learning architectures (U-Net, LSTM) with cel
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/Vincenzo-Verma/Dava-Drishti.git
-cd bah_v1_cu
+git clone https://github.com/Vincenzo-Verma/Dava-Drishti.git && cd Dava-Drishti
 ```
 
 2. **Set up environment**
