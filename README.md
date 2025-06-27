@@ -102,7 +102,7 @@ The web application will be available at `http://localhost:5000`
 ## 📁 Project Structure
 
 ```
-bah_v1_cu/
+Dava-Drishti/
 ├── app/                          # Main application package
 │   ├── __init__.py
 │   ├── models/                   # ML model implementations
