@@ -1,4 +1,5 @@
-# Forest Fire Prediction and Simulation System
+# Dava Drishti (दाव दृष्टि)
+"Fire Vision" - Combining "Dāva" (forest fire) with "Drishti" (vision/sight)
 
 A comprehensive AI/ML-powered forest fire prediction and simulation system that generates next-day fire probability maps and simulates fire spread dynamics for forest management and emergency response applications.
 
@@ -61,7 +62,7 @@ This system combines advanced deep learning architectures (U-Net, LSTM) with cel
 
 1. **Clone the repository**
 ```bash
-git clone <repository-url>
+git clone https://github.com/Vincenzo-Verma/Dava-Drishti.git
 cd bah_v1_cu
 ```
 
@@ -159,7 +160,7 @@ bah_v1_cu/
 ### Phase 3: Web Application (Weeks 9-11)
 - [ ] Interactive web interface
 - [ ] RESTful API endpoints
-- [ ] Real-time visualization
+- [ ] Real-time visualisation
 - [ ] User authentication
 
 ### Phase 4: Testing & Deployment (Weeks 12-14)
@@ -174,7 +175,7 @@ bah_v1_cu/
 ```python
 from app.models import FirePredictionModel
 
-# Initialize model
+# Initialise model
 model = FirePredictionModel()
 
 # Generate next-day fire risk map
@@ -191,7 +192,7 @@ risk_map.save("fire_risk_2024_01_15.tif")
 ```python
 from app.models import FireSpreadSimulation
 
-# Initialize simulation
+# Initialise simulation
 sim = FireSpreadSimulation()
 
 # Run 6-hour fire spread simulation
@@ -292,7 +293,7 @@ For support and questions:
 - [ ] Machine learning model retraining pipeline
 - [ ] Mobile application for field personnel
 - [ ] Integration with emergency response systems
-- [ ] Advanced visualization features (3D terrain, VR support)
+- [ ] Advanced visualisation features (3D terrain, VR support)
 - [ ] Multi-language support for international deployment
 
 ---
