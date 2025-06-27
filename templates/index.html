@@ -1,0 +1,281 @@
+{% extends "base.html" %}
+
+{% block title %}Forest Fire Prediction System - Home{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-4 text-center mb-3">
+            <i class="fas fa-fire text-danger"></i>
+            Forest Fire Prediction System
+        </h1>
+        <p class="lead text-center text-muted">
+            Advanced AI/ML-powered forest fire prediction and simulation for proactive forest management
+        </p>
+    </div>
+</div>
+
+<!-- System Status -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-heartbeat"></i> System Status</h5>
+            </div>
+            <div class="card-body">
+                <div class="row" id="system-status">
+                    <div class="col-md-3 text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Loading status...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stats-card">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-line fa-2x mb-2"></i>
+                <div class="stats-number" id="total-predictions">-</div>
+                <div class="stats-label">Total Predictions</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stats-card">
+            <div class="card-body text-center">
+                <i class="fas fa-play-circle fa-2x mb-2"></i>
+                <div class="stats-number" id="total-simulations">-</div>
+                <div class="stats-label">Simulations Run</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stats-card">
+            <div class="card-body text-center">
+                <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                <div class="stats-number" id="high-risk-areas">-</div>
+                <div class="stats-label">High Risk Areas</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stats-card">
+            <div class="card-body text-center">
+                <i class="fas fa-clock fa-2x mb-2"></i>
+                <div class="stats-number" id="system-uptime">-</div>
+                <div class="stats-label">System Uptime</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-bolt"></i> Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('web.prediction') }}" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-chart-line"></i><br>
+                            Fire Risk Prediction
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('web.simulation') }}" class="btn btn-warning btn-lg w-100">
+                            <i class="fas fa-play-circle"></i><br>
+                            Fire Spread Simulation
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('web.dashboard') }}" class="btn btn-info btn-lg w-100">
+                            <i class="fas fa-tachometer-alt"></i><br>
+                            Interactive Dashboard
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('web.analysis') }}" class="btn btn-success btn-lg w-100">
+                            <i class="fas fa-chart-bar"></i><br>
+                            Data Analysis
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-history"></i> Recent Predictions</h5>
+            </div>
+            <div class="card-body">
+                <div id="recent-predictions">
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-fire"></i> Recent Simulations</h5>
+            </div>
+            <div class="card-body">
+                <div id="recent-simulations">
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Load system status
+    loadSystemStatus();
+    
+    // Load recent activity
+    loadRecentPredictions();
+    loadRecentSimulations();
+    
+    // Load statistics
+    loadStatistics();
+});
+
+async function loadSystemStatus() {
+    try {
+        const status = await apiCall('/health');
+        const statusDiv = document.getElementById('system-status');
+        
+        let statusHtml = '';
+        Object.entries(status.models_loaded).forEach(([model, loaded]) => {
+            const icon = loaded ? 'fas fa-check-circle text-success' : 'fas fa-times-circle text-danger';
+            const text = loaded ? 'Operational' : 'Not Loaded';
+            statusHtml += `
+                <div class="col-md-3 text-center">
+                    <i class="${icon} fa-2x"></i>
+                    <p class="mt-2">${model.toUpperCase()}: ${text}</p>
+                </div>
+            `;
+        });
+        
+        statusDiv.innerHTML = statusHtml;
+    } catch (error) {
+        console.error('Failed to load system status:', error);
+    }
+}
+
+async function loadRecentPredictions() {
+    try {
+        const predictions = await apiCall('/predictions?limit=5');
+        const container = document.getElementById('recent-predictions');
+        
+        if (predictions.predictions.length === 0) {
+            container.innerHTML = '<p class="text-muted">No recent predictions</p>';
+            return;
+        }
+        
+        let html = '';
+        predictions.predictions.forEach(pred => {
+            const riskClass = `risk-${pred.risk_level}`;
+            html += `
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                        <strong>${pred.region}</strong><br>
+                        <small class="text-muted">${formatDate(pred.prediction_date)}</small>
+                    </div>
+                    <span class="badge bg-${getRiskColor(pred.risk_level)}">${pred.risk_level.toUpperCase()}</span>
+                </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+    } catch (error) {
+        console.error('Failed to load recent predictions:', error);
+    }
+}
+
+async function loadRecentSimulations() {
+    try {
+        const simulations = await apiCall('/simulations?limit=5');
+        const container = document.getElementById('recent-simulations');
+        
+        if (simulations.simulations.length === 0) {
+            container.innerHTML = '<p class="text-muted">No recent simulations</p>';
+            return;
+        }
+        
+        let html = '';
+        simulations.simulations.forEach(sim => {
+            html += `
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                        <strong>${sim.simulation_id}</strong><br>
+                        <small class="text-muted">${formatDate(sim.created_at)}</small>
+                    </div>
+                    <span class="badge bg-${sim.status === 'completed' ? 'success' : 'warning'}">${sim.status}</span>
+                </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+    } catch (error) {
+        console.error('Failed to load recent simulations:', error);
+    }
+}
+
+async function loadStatistics() {
+    try {
+        const predictions = await apiCall('/predictions');
+        const simulations = await apiCall('/simulations');
+        
+        document.getElementById('total-predictions').textContent = formatNumber(predictions.count);
+        document.getElementById('total-simulations').textContent = formatNumber(simulations.count);
+        
+        // Calculate high risk areas
+        const highRiskCount = predictions.predictions.filter(p => p.risk_level === 'high' || p.risk_level === 'extreme').length;
+        document.getElementById('high-risk-areas').textContent = formatNumber(highRiskCount);
+        
+        // System uptime (placeholder)
+        document.getElementById('system-uptime').textContent = '99.5%';
+        
+    } catch (error) {
+        console.error('Failed to load statistics:', error);
+    }
+}
+
+function getRiskColor(riskLevel) {
+    const colors = {
+        'low': 'success',
+        'medium': 'warning',
+        'high': 'danger',
+        'extreme': 'dark'
+    };
+    return colors[riskLevel] || 'secondary';
+}
+</script>
+{% endblock %} 
